@@ -1,10 +1,10 @@
 #!/bin/bash
 
-path_locale="${HOME}/Documents/42/submits/push_swap/"
-# path_locale="../push_swap_sequel2/"
+path_locale="${HOME}/Documents/42/submits/push_swap/check/"
+# path_locale="../push_swap/"
 parameter_num=$1
 check='^[0-9]+$'
-bonus=1
+bonus=0
 
 function timeout 
 {
