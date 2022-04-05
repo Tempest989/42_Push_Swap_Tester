@@ -4,7 +4,7 @@ path_locale="${HOME}/Documents/42/submits/push_swap/"
 # path_locale="../push_swap_sequel2/"
 parameter_num=$1
 check='^[0-9]+$'
-bonus=0
+bonus=1
 
 function timeout 
 {
@@ -471,8 +471,13 @@ then
 	printf "\n------------Starting 5 Numbers Tests:-----------\n"
 	max=0
 	min=-1
-	completed=1
+	completed=0
 	track=0
+	if [ ! -f "5_done.txt" ]
+	then
+		printf "\n5_done.txt file doesn't exist, please re-create it manually or by the Git.\n"
+		exit 0
+	fi
 	while read line
 	do
 		echo ${line} > 5.txt
@@ -490,7 +495,7 @@ then
 		printf "RNG Compilation Failed!\n"
 		exit 0
 	fi
-	printf "Generation of RNG Executable: Success!\n\n"
+	printf "Generation of RNG Executable: Successful!\n\n"
 fi
 
 if [ "$#" -eq "0" ]
