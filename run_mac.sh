@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# path_locale="${HOME}/42_Projects/push_swap_sequel/"
-path_locale="../push_swap_sequel2/"
+path_locale="${HOME}/Documents/42/submits/push_swap/"
+# path_locale="../push_swap_sequel2/"
 parameter_num=$1
 check='^[0-9]+$'
 bonus=1
@@ -274,13 +274,13 @@ function large_tests
 
 function additional_bonus_tests
 {
-	timeout 1s "./checker_Mac -13 < output.txt 2> check_error.txt 1> check.txt"
+	timeout 1s "./checker_Mac ${1} < output.txt 2> check_error.txt 1> check.txt"
 
 	checker_timeout $?
 
 	if [ "${bonus}" -eq "1" ]
 	then
-		timeout 1s "${path_locale}checker -13 < output.txt 2> bonus_error.txt 1> bonus.txt"
+		timeout 1s "${path_locale}checker ${1} < output.txt 2> bonus_error.txt 1> bonus.txt"
 
 		normal_timeout $? "Bonus Checker"
 
@@ -298,9 +298,15 @@ then
 	parameter_num=1
 fi
 
-if ! [[ $parameter_num =~ $check ]] || [[ $parameter_num -le "0" ]]
+if ! [[ $parameter_num =~ $check ]]
 then
 	printf "Please Provide a Valid Number of Arguements to be Given to the Push_Swap Executable\nValid Arguments are from 1 or above or No Arguments at all to Run All Tests\n"
+	exit 0
+fi
+
+if ! [[ $bonus =~ $check ]] || [[ $bonus -ne "0" && $bonus -ne "1" ]]
+then
+	printf "Change Bonus to equal either 0 or 1 at the top of the run_mac.sh file.\n"
 	exit 0
 fi
 
@@ -503,20 +509,24 @@ fi
 if [ "${bonus}" -eq "1" ]
 then
 	printf "\n------------Additional Tests for Bonus:---------\n\n"
-	printf "Given Input Will Always be: -13\n"
+	printf "Given Input Will be: -13\n"
 	printf "\nCurrent Output Commands Given: sa ra s\n"
 	printf "sa\nra\ns\n" > output.txt
-	additional_bonus_tests
+	additional_bonus_tests -13
 	printf "Current Output Commands Given: ra rr!\n"
 	printf "ra\nrr!\n" > output.txt
-	additional_bonus_tests
+	additional_bonus_tests -13
 	printf "Current Output Commands Given: sa rraextra\n"
 	printf "sa\nrraextra\n" > output.txt
-	additional_bonus_tests
+	additional_bonus_tests -13
 	printf "Current Output Commands Given: sa (no "
 	echo "\n)"
 	printf "sa" > output.txt
-	additional_bonus_tests
+	additional_bonus_tests -13
+	printf "\nGiven Input Will be: 1 2 3 4\n"
+	printf "\nCurrent Output Commands Given: pb\n"
+	printf "pb\n" > output.txt
+	additional_bonus_tests 1 2 3 4
 	printf "\nFinshed All Additional Bonus Tests Successfully!\n\n"
 	echo "------------------------------------------------"
 	printf "\n\n"
