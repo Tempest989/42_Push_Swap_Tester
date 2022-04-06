@@ -71,7 +71,7 @@ function ko_error_checks
 		tput bold
 		tput smso
 		tput setaf 1
-		printf "KO\n"
+		printf "KO\n\n"
 		tput sgr0
 		printf "Hint: Error Messages Do Not Go through Stdout, Check Subject.pdf\n"
 		exit 0
@@ -81,7 +81,7 @@ function ko_error_checks
 		tput bold
 		tput smso
 		tput setaf 1
-		printf "KO\n"
+		printf "KO\n\n"
 		tput sgr0
 		exit 0
 	elif [ "${checker_error}" == "Error" ] && [ "${error_check}" == "Error" ]
@@ -95,7 +95,7 @@ function ko_error_checks
 			tput bold
 			tput smso
 			tput setaf 1
-			printf "KO\n"
+			printf "KO\n\n"
 			tput sgr0
 			exit 0
 		fi
@@ -105,7 +105,7 @@ function ko_error_checks
 		tput bold
 		tput smso
 		tput setaf 1
-		printf "KO\n"
+		printf "KO\n\n"
 		tput sgr0
 		printf "Please Check ${1}.txt for the Given Input, output.txt for Push_Swap's Output, errror.txt for Push_Swap's Error Output and Check.txt for the Checker's Output.\n"
 		exit 0
@@ -270,6 +270,30 @@ function large_tests
 	done
 
 	stats_output ${1}
+}
+
+function indentity_tests
+{
+	if [ "$#" -eq "1" ]
+	then
+		timeout 1s "${path_locale}push_swap ${1} &> output.txt"
+	elif [ "$#" -eq "4" ]
+	then
+		timeout 1s "${path_locale}push_swap ${1} ${2} ${3} ${4} &> output.txt"
+	else
+		timeout 1s "${path_locale}push_swap ${1} ${2} ${3} ${4} ${5} ${6} ${7} ${8} ${9} ${10} &> output.txt"
+	fi
+	normal_timeout $? "Push_Swap"
+	if [ -s output.txt ]
+	then
+		printf "Output Given when Stack is inputted in ascending order: "
+		tput bold
+		tput smso
+		tput setaf 1
+		printf "KO\n\n"
+		tput sgr0
+		exit 0
+	fi
 }
 
 function additional_bonus_tests
@@ -485,6 +509,20 @@ then
 	done < 5_done.txt
 	basics_test ${line}
 	stats_output 5
+fi
+
+if [ "$#" -eq  "0" ]
+then
+	printf "\n------------Starting Identity Tests:------------\n\n"
+	printf "Testing Input: 42\n"
+	indentity_tests 42
+	printf "Testing Input: 0 1 2 3\n"
+	indentity_tests 0 1 2 3
+	printf "Testing Input: 0 1 2 3 4 5 6 7 8 9\n"
+	indentity_tests 0 1 2 3 4 5 6 7 8 9
+	printf "\nFinshed All Indentity Tests Successfully!\n\n"
+	echo "------------------------------------------------"
+	printf "\n\n"
 fi
 
 if [ ! -f "random" ] 
