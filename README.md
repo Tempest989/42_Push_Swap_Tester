@@ -8,9 +8,9 @@ A Tester for the 42 push_swap Project
 
 
 ### Which File to Run:
-- If your OS can use the bash **timeout** and **xargs -a**, then run `fast.sh` file.
-- Otherwise run the `slow.sh` file, which uses different methods to replicate the uses of **timeout** and **xargs -a**.
-Both files run the same tests and show the same errors, with the only major difference being `fast.sh` should be slightly faster than the `slow.sh`
+Both `slow.sh` and `fast.sh` files can be used to run this Tester, with the only major difference being `fast.sh` should be slightly faster than the `slow.sh`
+- If your OS can use the bash **timeout** and **xargs -a** functions, then run `fast.sh` file.
+- Otherwise run the `slow.sh` file, which uses different methods to replicate the uses of **timeout** and **xargs -a**.  
 
 
 ### How to Run:
