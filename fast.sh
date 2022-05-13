@@ -1,15 +1,20 @@
 #!/bin/bash
 
-path_locale="${HOME}/Documents/42/submits/push_swap/check/"
+#-------------------------------------------------------------------------------------
+
+# What you can change
+
+path_locale="${HOME}/Documents/42/push_swap/"
 # path_locale="../push_swap/"
+bonus=0
+system="linux"
+
+# PLEASE DON'T CHANGE ANYTHING BELOW THIS LINE UNLESS YOU MEAN TO CHANGE THE TESTER
+
+#--------------------------------------------------------------------------------------
+
 parameter_num=$1
 check='^[0-9]+$'
-bonus=0
-
-function timeout 
-{
-	perl -e 'alarm shift; exec @ARGV' "$@";
-}
 
 function call_working
 {
@@ -160,36 +165,36 @@ function basics_test
 {
 	if [ "$#" -eq "5" ]
 	then
-		timeout 1s "${path_locale}push_swap $1 $2 $3 $4 $5 2> error.txt 1> output.txt"
+		timeout -k 1s 1s ${path_locale}push_swap $1 $2 $3 $4 $5 2> error.txt 1> output.txt
 	elif [ "$#" -eq "1" ]
 	then
-		timeout 1s "${path_locale}push_swap $1 2> error.txt 1> output.txt"
+		timeout -k 1s 1s ${path_locale}push_swap $1 2> error.txt 1> output.txt
 	elif [ "$#" -eq "2" ]
 	then
-		timeout 1s "${path_locale}push_swap $1 $2 2> error.txt 1> output.txt"
+		timeout -k 1s 1s ${path_locale}push_swap $1 $2 2> error.txt 1> output.txt
 	elif [ "$#" -eq "3" ]
 	then
-		timeout 1s "${path_locale}push_swap $1 $2 $3 2> error.txt 1> output.txt"
+		timeout -k 1s 1s ${path_locale}push_swap $1 $2 $3 2> error.txt 1> output.txt
 	else
-		timeout 1s "${path_locale}push_swap 2> error.txt 1> output.txt"
+		timeout -k 1s 1s ${path_locale}push_swap 2> error.txt 1> output.txt
 	fi
 
 	normal_timeout $? "Push_Swap"
 
 	if [ "$#" -eq "5" ]
 	then
-		timeout 1s "./checker_Mac $1 $2 $3 $4 $5 < output.txt 2> check_error.txt 1> check.txt"
+		timeout -k 1s 1s ./checker_${system} $1 $2 $3 $4 $5 < output.txt 2> check_error.txt 1> check.txt
 	elif [ "$#" -eq "1" ]
 	then
-		timeout 1s "./checker_Mac $1 < output.txt 2> check_error.txt 1> check.txt"
+		timeout -k 1s 1s ./checker_${system} $1 < output.txt 2> check_error.txt 1> check.txt
 	elif [ "$#" -eq "2" ]
 	then
-		timeout 1s "./checker_Mac $1 $2 < output.txt 2> check_error.txt 1> check.txt"
+		timeout -k 1s 1s ./checker_${system} $1 $2 < output.txt 2> check_error.txt 1> check.txt
 	elif [ "$#" -eq "3" ]
 	then
-		timeout 1s "./checker_Mac $1 $2 $3 < output.txt 2> check_error.txt 1> check.txt"
+		timeout -k 1s 1s ./checker_${system} $1 $2 $3 < output.txt 2> check_error.txt 1> check.txt
 	else
-		timeout 1s "./checker_Mac < output.txt 2> check_error.txt 1> check.txt"
+		timeout -k 1s 1s ./checker_${system} < output.txt 2> check_error.txt 1> check.txt
 	fi
 
 	checker_timeout $?
@@ -198,18 +203,18 @@ function basics_test
 	then
 		if [ "$#" -eq "5" ]
 		then
-			timeout 1s "${path_locale}checker $1 $2 $3 $4 $5 < output.txt 2> bonus_error.txt 1> bonus.txt"
+			timeout -k 1s 1s ${path_locale}checker $1 $2 $3 $4 $5 < output.txt 2> bonus_error.txt 1> bonus.txt
 		elif [ "$#" -eq "1" ]
 		then
-			timeout 1s "${path_locale}checker $1 < output.txt 2> bonus_error.txt 1> bonus.txt"
+			timeout -k 1s 1s ${path_locale}checker $1 < output.txt 2> bonus_error.txt 1> bonus.txt
 		elif [ "$#" -eq "2" ]
 		then
-			timeout 1s "${path_locale}checker $1 $2 < output.txt 2> bonus_error.txt 1> bonus.txt"
+			timeout -k 1s 1s ${path_locale}checker $1 $2 < output.txt 2> bonus_error.txt 1> bonus.txt
 		elif [ "$#" -eq "3" ]
 		then
-			timeout 1s "${path_locale}checker $1 $2 $3 < output.txt 2> bonus_error.txt 1> bonus.txt"
+			timeout -k 1s 1s ${path_locale}checker $1 $2 $3 < output.txt 2> bonus_error.txt 1> bonus.txt
 		else
-			timeout 1s "${path_locale}checker < output.txt 2> bonus_error.txt 1> bonus.txt"
+			timeout -k 1s 1s ${path_locale}checker < output.txt 2> bonus_error.txt 1> bonus.txt
 		fi
 
 		normal_timeout $? "Bonus Checker"
@@ -226,7 +231,7 @@ function basics_test
 function large_tests
 {
 	txtfile="${1}.txt"
-	timeout 1 "./random w > $txtfile"
+	timeout -k 1s 1s ./random w > $txtfile
 
 	normal_timeout $? "Initial RNG Script"
 
@@ -239,24 +244,24 @@ function large_tests
 	do
 		ran_parameters=$(awk '{ print $1, $2, $3; exit }' $txtfile)
 
-		timeout 1 "./random ${1} ${ran_parameters} > $txtfile"
+		timeout -k 1s 1s ./random ${1} ${ran_parameters} > $txtfile
 
 		normal_timeout $? "RNG Script"
 
-		input=$(cat $txtfile)
-		call_working $? "Cat Core Function"
+		# input=$(cat $txtfile)
+		# call_working $? "Cat Core Function"
 
-		timeout 1 "${path_locale}push_swap ${input} 2> error.txt 1> output.txt"
+		timeout -k 1s 1s xargs -a $txtfile ${path_locale}push_swap 2> error.txt 1> output.txt
 		
 		normal_timeout $? "Push_Swap"
 
-		timeout 1s "./checker_Mac ${input} < output.txt 2> check_error.txt 1> check.txt"
+		timeout -k 1s 1s xargs -a $txtfile ./checker_${system} < output.txt 2> check_error.txt 1> check.txt
 
 		checker_timeout $?
 
 		if [ "${bonus}" -eq "1" ]
 		then
-			timeout 1s "${path_locale}checker $1 $2 $3 $4 $5 < output.txt 2> bonus_error.txt 1> bonus.txt"
+			timeout -k 1s 1s xargs -a $txtfile ${path_locale}checker < output.txt 2> bonus_error.txt 1> bonus.txt
 
 			normal_timeout $? "Bonus Checker"
 
@@ -276,12 +281,12 @@ function indentity_tests
 {
 	if [ "$#" -eq "1" ]
 	then
-		timeout 1s "${path_locale}push_swap ${1} &> output.txt"
+		timeout -k 1s 1s ${path_locale}push_swap ${1} &> output.txt
 	elif [ "$#" -eq "4" ]
 	then
-		timeout 1s "${path_locale}push_swap ${1} ${2} ${3} ${4} &> output.txt"
+		timeout -k 1s 1s ${path_locale}push_swap ${1} ${2} ${3} ${4} &> output.txt
 	else
-		timeout 1s "${path_locale}push_swap ${1} ${2} ${3} ${4} ${5} ${6} ${7} ${8} ${9} ${10} &> output.txt"
+		timeout -k 1s 1s ${path_locale}push_swap ${1} ${2} ${3} ${4} ${5} ${6} ${7} ${8} ${9} ${10} &> output.txt
 	fi
 	normal_timeout $? "Push_Swap"
 	if [ -s output.txt ]
@@ -298,13 +303,13 @@ function indentity_tests
 
 function additional_bonus_tests
 {
-	timeout 1s "./checker_Mac ${1} < output.txt 2> check_error.txt 1> check.txt"
+	timeout -k 1s 1s ./checker_${system} ${1} < output.txt 2> check_error.txt 1> check.txt
 
 	checker_timeout $?
 
 	if [ "${bonus}" -eq "1" ]
 	then
-		timeout 1s "${path_locale}checker ${1} < output.txt 2> bonus_error.txt 1> bonus.txt"
+		timeout -k 1s 1s ${path_locale}checker ${1} < output.txt 2> bonus_error.txt 1> bonus.txt
 
 		normal_timeout $? "Bonus Checker"
 
@@ -330,13 +335,13 @@ fi
 
 if ! [[ $bonus =~ $check ]] || [[ $bonus -ne "0" && $bonus -ne "1" ]]
 then
-	printf "Change Bonus to equal either 0 or 1 at the top of the run_mac.sh file.\n"
+	printf "Change the bonus variable to equal either 0 or 1 at the top of fast.sh.\n"
 	exit 0
 fi
 
-if [[ "${OSTYPE}" != "darwin"* ]]
+if [ "${system}" != "mac" ] && [ "${system}" != "linux" ]
 then
-	printf "This Script is For MacOS, So if this isn't MacOS Please Reconsider Running this Script.\nIf you still wish to run it, Comment out lines 168-172.\nBUT REMEMBER, YOU WERE WARNED!\n"
+	printf "Change the system variable to equal either mac or linux at the top of fast.sh.\n"
 	exit 0
 fi
 
@@ -348,6 +353,7 @@ then
 	if [ ! -f "${path_locale}Makefile" ]
 	then
 		printf "No Makefile Found, Please Create One or Compile Your Push_Swap Project Before Running this Script!\n"
+		printf "And Make Sure the path_locale Variable in fast.sh is Pointing to the Correct Directory.\n"
 		exit 0
 	else
 		printf "Running Make...\n"
@@ -358,7 +364,7 @@ then
 		fi
 		if [ ! -f "${path_locale}push_swap" ]
 		then
-			printf "\nWrong Name for Compiled Executable, Please Change Executable Name in Either the Makefile or in this run.sh Script!\n"
+			printf "\nWrong Name for Compiled Executable, Please Change Executable Name in Either the Makefile or during your own Compiling before Running This Script!\n"
 			exit 0
 		fi
 		printf "Project Compiled Successfully via Makefile!!\n\n"
@@ -497,16 +503,16 @@ then
 	min=-1
 	completed=0
 	track=0
-	if [ ! -f "5_done.txt" ]
+	if [ ! -f "Combinations_of_5.txt" ]
 	then
-		printf "\n5_done.txt file doesn't exist, please re-create it manually or by the Git.\n"
+		printf "\nCombinations_of_5.txt file doesn't exist, please re-create it manually or by the Git.\n"
 		exit 0
 	fi
 	while read line
 	do
 		echo ${line} > 5.txt
 		basics_test ${line}
-	done < 5_done.txt
+	done < Combinations_of_5.txt
 	basics_test ${line}
 	stats_output 5
 fi
