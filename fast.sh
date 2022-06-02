@@ -142,7 +142,8 @@ function normal_timeout
 		exit 0
 	elif [ "${1}" -ne "0" ]
 	then
-		printf "Error Returned from ${2} Executable.\n"
+		printf "\nNon-Zero Exit Status returned from ${2} Executable.\n\n"
+		printf "Please Make all Exit Statuses 0. Except if a Major Error occurs where the Running of the Tester should be Stopped, such as Malloc Function Call Failing etc and Not when an Invalid Input is Given etc.\n\n"
 		exit 0
 	fi
 }
